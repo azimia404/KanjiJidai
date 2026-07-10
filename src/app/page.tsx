@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, Typography } from '@mui/material';
-import { AccessAlarm } from '@mui/icons-material';
+import { FindKanjiForm } from '@/features/find/ui/FindKanjiForm';
 
 export default function Home() {
   return (
@@ -10,9 +10,7 @@ export default function Home() {
         Kanji Explorer Test
       </Typography>
 
-      <Button variant="contained" startIcon={<AccessAlarm />}>
-        Test Button
-      </Button>
+      <FindKanjiForm />
     </div>
   );
 }
