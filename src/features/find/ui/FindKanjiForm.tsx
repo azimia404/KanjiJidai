@@ -54,6 +54,8 @@ export function FindKanjiForm() {
           )}
         </Paper>
       )}
+
+      {result && <KanjiTree character={query} kanji={result} />}
     </>
   );
 }
