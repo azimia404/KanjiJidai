@@ -24,6 +24,7 @@ function KanjiNode({ node }: { node: KanjiComponent }) {
   return (
     <li>
       <span className={node.phonetic ? 'phonetic' : node.radical ? 'radical' : ''}>{node.element}</span> — {node.meanings.length ? node.meanings.join(', ') : 'No meanings'}
+      {node.position && <span> ({node.position})</span>}
       {node.children.length > 0 && (
         <ul>
           {node.children.map((c, i) => <KanjiNode key={i} node={c} />)}

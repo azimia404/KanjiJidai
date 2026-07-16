@@ -1,6 +1,22 @@
+export type KanjiPosition =
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'middle'
+  | 'kamae'
+  | 'kamaec'
+  | 'nyo'
+  | 'nyoc'
+  | 'tare'
+  | 'tarec'
+  | '⿵A'
+  | '⿵B';
+
 export interface KanjiComponent {
   element: string;
   original: string | null;
+  position: KanjiPosition | null;
   phonetic: boolean;
   radical: boolean;
   meanings: string[];
