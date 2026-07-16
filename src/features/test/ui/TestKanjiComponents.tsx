@@ -11,19 +11,15 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
 import { pickRandomComponents } from "@/features/test/api/pickRandomComponents";
-import { KanjiComponent, KanjiData, KanjiEntry } from "@/shared/types/kanji";
+import { KanjiComponent, KanjiData, KanjiEntry, KANJI_POSITIONS } from "@/shared/types/kanji";
 import { pickConfusables } from "../api/pickConfusables";
 
 const kanjiData = kanjiDataRaw as KanjiData;
 
 export function makeRound(kanji: string) {
-  const answers = kanjiData[kanji].decomposition.map(
-    (c: KanjiComponent) => c.element,
-  );
+  const answers = kanjiData[kanji].decomposition;
   const forbidden = allTreeNodes(kanjiData[kanji]); // every depth
-  console.log("forbidden", forbidden);
   const distractors = pickConfusables(answers, forbidden, 4);
-  console.log("distractors", distractors);
   return {
     prompt: kanjiData[kanji].meanings[0],
     tiles: shuffle([...answers, ...distractors]),
@@ -54,55 +50,82 @@ function allTreeNodes(kanji: KanjiEntry): Set<string> {
 }
 
 export function TestKanjiComponents() {
-  const handleSearch = (q: string) => {
-    setResult(findKanji(q) ?? null);
-    setRound(makeRound(q));
-    setSelected([]);
-    setRevealed(false);
-  };
+  const [positionRound, setPositionRound] = useState(false);
+  // const handleSearch = (q: string) => {
+  //   setResult(findKanji(q) ?? null);
+  //   setRound(makeRound(q));
+  //   setSelected([]);
+  //   setRevealed(false);
+  // };
 
-  const [query, setQuery] = useState("国");
-  const [result, setResult] = useState<ReturnType<typeof findKanji> | null>(
-    findKanji(query),
-  );
+  const [query, setQuery] = useState("薬");
+  // const [result, setResult] = useState<ReturnType<typeof findKanji> | null>(
+  //   findKanji(query),
+  // );
 
   const [round, setRound] = useState(() => makeRound(query));
-  const [selected, setSelected] = useState<string[]>([]);
-  const [revealed, setRevealed] = useState(false);
+  const [selected, setSelected] = useState<KanjiComponent[]>([]);
+  const [currentComponent, setCurrentComponent] =
+    useState<KanjiComponent | null>(null);
+  // const [revealed, setRevealed] = useState(false);
 
   return (
     <>
       {round.prompt}
       <ToggleButtonGroup aria-label="kanji components">
-        {round.tiles.map((s) => {
+        {round.tiles.map((s, i) => {
           const found = selected.includes(s);
           return (
             <ToggleButton
-              key={s}
-              value={s}
+              key={i}
+              value={s.element}
               selected={found}
               disabled={found}
-              aria-label={s}
+              aria-label={s.element}
               onClick={() => {
                 if (round.answers.includes(s)) {
-                  setSelected((prev) => [...prev, s]);
-                  console.log("selected", selected);
-                  console.log("round.answers", round.answers);
+                  setPositionRound(true);
+                  setCurrentComponent(s);
+                  // setSelected((prev) => [...prev, s]);
                 }
               }}
             >
-              {s}
+              {s.element}
             </ToggleButton>
           );
         })}
-       </ToggleButtonGroup>
+      </ToggleButtonGroup>
 
-       {selected.length === round.answers.length && (query)}
+      {positionRound && (
+        <>
+          <h1>Position round for {currentComponent?.element}</h1>
+          <ToggleButtonGroup aria-label="kanji component positions">
+            {KANJI_POSITIONS.map((pos) => (
+              <ToggleButton
+                key={pos}
+                value={pos}
+                aria-label={pos}
+                onClick={() => {
+                  if (pos === currentComponent?.position) {
+                    setSelected((prev) => [...prev, currentComponent]);
+                    setCurrentComponent(null);
+                    setPositionRound(false);
+                  }
+                }}
+              >
+                {pos}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </>
+      )}
+
+      {selected.length === round.answers.length && query}
     </>
   );
 }
 
-//   <Input
+// </>   <Input
 //     value={query}
 //     onChange={setQuery}
 //     placeholder="Введите кандзи"

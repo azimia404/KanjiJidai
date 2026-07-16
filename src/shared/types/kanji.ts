@@ -1,17 +1,20 @@
-export type KanjiPosition =
-  | 'top'
-  | 'bottom'
-  | 'left'
-  | 'right'
-  | 'middle'
-  | 'kamae'
-  | 'kamaec'
-  | 'nyo'
-  | 'nyoc'
-  | 'tare'
-  | 'tarec'
-  | '⿵A'
-  | '⿵B';
+export const KANJI_POSITIONS = [
+  'top',
+  'bottom',
+  'left',
+  'right',
+  'middle',
+  'kamae',
+  'kamaec',
+  'nyo',
+  'nyoc',
+  'tare',
+  'tarec',
+  '⿵A',
+  '⿵B',
+] as const;
+
+export type KanjiPosition = (typeof KANJI_POSITIONS)[number];
 
 export interface KanjiComponent {
   element: string;

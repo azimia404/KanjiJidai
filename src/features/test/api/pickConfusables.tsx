@@ -3,20 +3,36 @@ import type { KanjiData, KanjiComponent } from "@/shared/types/kanji";
 
 const kanjiData = kanjiDataRaw as KanjiData;
 
-function collectElements(nodes: KanjiComponent[], into: Set<string>) {
+function collectElements(nodes: KanjiComponent[], into: Map<string, string[]>) {
   for (const node of nodes) {
-    into.add(node.element);
+    if (!into.has(node.element)) into.set(node.element, node.meanings);
     collectElements(node.children, into);
   }
 }
 
-const allComponentElements = (() => {
-  const set = new Set<string>();
+const allComponents = (() => {
+  const map = new Map<string, string[]>();
   for (const entry of Object.values(kanjiData)) {
-    collectElements(entry.decomposition, set);
+    collectElements(entry.decomposition, map);
   }
-  return Array.from(set);
+  return map;
 })();
+
+const allComponentElements = Array.from(allComponents.keys());
+
+// distractors aren't really part of the target kanji, so position/phonetic/
+// radical don't apply — just carry the glyph and its own meanings, if any.
+function toComponent(element: string): KanjiComponent {
+  return {
+    element,
+    original: null,
+    position: null,
+    phonetic: false,
+    radical: false,
+    meanings: allComponents.get(element) ?? [],
+    children: [],
+  };
+}
 
 // Hand-authored lookalikes worth mixing in deliberately — these are the
 // mix-ups a learner actually makes, not just visually random glyphs.
@@ -47,16 +63,17 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 export function pickConfusables(
-  answers: string[],
+  answers: KanjiComponent[],
   forbidden: Set<string>,
   count: number,
-): string[] {
-  const exclude = new Set([...answers, ...forbidden]);
+): KanjiComponent[] {
+  const answerElements = answers.map((a) => a.element);
+  const exclude = new Set([...answerElements, ...forbidden]);
   const picked: string[] = [];
 
   const lookalikes = new Set<string>();
-  for (const answer of answers) {
-    for (const lookalike of CONFUSABLES[answer] ?? []) {
+  for (const element of answerElements) {
+    for (const lookalike of CONFUSABLES[element] ?? []) {
       if (!exclude.has(lookalike)) lookalikes.add(lookalike);
     }
   }
@@ -74,5 +91,5 @@ export function pickConfusables(
     }
   }
 
-  return picked;
+  return picked.map(toComponent);
 }
