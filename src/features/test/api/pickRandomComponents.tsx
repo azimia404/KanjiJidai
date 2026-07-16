@@ -2,7 +2,25 @@ import kanjiDataRaw from "@/shared/assets/kanji_data.json";
 import type { KanjiData, KanjiEntry } from "@/shared/types/kanji";
 
 const kanjiData = kanjiDataRaw as KanjiData;
+const allEntries = Object.values(kanjiData);
 
 export function pickRandomComponents(query: string): KanjiEntry[] | undefined {
-  return [kanjiData[query], kanjiData[query], kanjiData[query], kanjiData[query]];
+  const correct = kanjiData[query];
+  if (!correct) return undefined;
+
+  const wrongChoices: KanjiEntry[] = [];
+  while (wrongChoices.length < 3) {
+    const candidate = allEntries[Math.floor(Math.random() * allEntries.length)];
+    if (candidate !== correct && !wrongChoices.includes(candidate)) {
+      wrongChoices.push(candidate);
+    }
+  }
+
+  const choices = [correct, ...wrongChoices];
+  for (let i = choices.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [choices[i], choices[j]] = [choices[j], choices[i]];
+  }
+
+  return choices;
 }

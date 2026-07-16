@@ -2,6 +2,7 @@
 
 import { Button, Typography } from '@mui/material';
 import { FindKanjiForm } from '@/features/find/ui/FindKanjiForm';
+import { TestKanjiComponents } from '@/features/test/ui/TestKanjiComponents';
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
       </Typography>
 
       <FindKanjiForm />
+      <TestKanjiComponents />
     </div>
   );
 }
