@@ -13,6 +13,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { pickRandomComponents } from "@/features/test/api/pickRandomComponents";
 import { KanjiComponent, KanjiData, KanjiEntry, KANJI_POSITIONS } from "@/shared/types/kanji";
 import { pickConfusables } from "../api/pickConfusables";
+import shuffle from "@/shared/lib/shuffle/shuffle";
 
 const kanjiData = kanjiDataRaw as KanjiData;
 
@@ -25,18 +26,6 @@ export function makeRound(kanji: string) {
     tiles: shuffle([...answers, ...distractors]),
     answers,
   };
-}
-
-// Fisher-Yates shuffle
-function shuffle<T>(arr: T[]): T[] {
-  console.log("shuffling", arr);
-  const copy = [...arr];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  console.log("shuffled", copy);
-  return copy;
 }
 
 function allTreeNodes(kanji: KanjiEntry): Set<string> {
@@ -124,44 +113,3 @@ export function TestKanjiComponents() {
     </>
   );
 }
-
-// </>   <Input
-//     value={query}
-//     onChange={setQuery}
-//     placeholder="Введите кандзи"
-//   />
-
-//   <Button onClick={() => handleSearch(query)}>
-//     Найти
-//   </Button>
-
-//   {result && (
-//     <Paper elevation={2} sx={{ p: 3, mt: 2, maxWidth: 480 }}>
-//       <Stack direction="row" spacing={2} alignItems="baseline">
-//         <Typography variant="h2" component="span">{query}</Typography>
-//         <Typography variant="body1" color="text.secondary">
-//           {result.meanings.join(', ')}
-//         </Typography>
-//       </Stack>
-
-//       <Stack direction="row" spacing={1} flexWrap="wrap" sx={{ mt: 2 }}>
-//         {result.strokes && <Chip size="small" label={`${result.strokes} strokes`} />}
-//         {result.grade && <Chip size="small" label={`Grade ${result.grade}`} />}
-//         {result.jlpt && <Chip size="small" label={`JLPT N${result.jlpt}`} />}
-//         {result.freq && <Chip size="small" label={`Freq #${result.freq}`} />}
-//       </Stack>
-
-//       {result.readings_on.length > 0 && (
-//         <Typography variant="body2" sx={{ mt: 2 }}>
-//           <strong>On:</strong> {result.readings_on.join('、')}
-//         </Typography>
-//       )}
-//       {result.readings_kun.length > 0 && (
-//         <Typography variant="body2">
-//           <strong>Kun:</strong> {result.readings_kun.join('、')}
-//         </Typography>
-//       )}
-//     </Paper>
-//   )}
-
-//   {result && <KanjiTree character={query} kanji={result} />}
