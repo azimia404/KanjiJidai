@@ -1,7 +1,6 @@
-import kanjiDataRaw from "@/shared/assets/kanji_data.json";
-import type { KanjiData, KanjiEntry } from "@/shared/types/kanji";
+import { kanjiData } from "@/entities/kanji";
+import type { KanjiEntry } from "@/entities/kanji";
 
-const kanjiData = kanjiDataRaw as KanjiData;
 const allEntries = Object.values(kanjiData);
 
 export function pickRandomComponents(query: string): KanjiEntry[] | undefined {

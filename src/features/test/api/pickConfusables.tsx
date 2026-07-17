@@ -1,7 +1,5 @@
-import kanjiDataRaw from "@/shared/assets/kanji_data.json";
-import type { KanjiData, KanjiComponent } from "@/shared/types/kanji";
-
-const kanjiData = kanjiDataRaw as KanjiData;
+import { kanjiData } from "@/entities/kanji";
+import type { KanjiComponent } from "@/entities/kanji";
 
 function collectElements(nodes: KanjiComponent[], into: Map<string, string[]>) {
   for (const node of nodes) {

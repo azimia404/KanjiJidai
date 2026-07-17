@@ -3,19 +3,17 @@
 import { useState } from "react";
 import { Button, Paper, Stack, Chip, Typography } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
-import { findKanji } from "@/features/find/api/findKanji";
-import KanjiTree from "@/shared/ui/KanjiTree/KanjiTree";
-import kanjiDataRaw from "@/shared/assets/kanji_data.json";
-
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 
-import { pickRandomComponents } from "@/features/test/api/pickRandomComponents";
-import { KanjiComponent, KanjiData, KanjiEntry, KANJI_POSITIONS } from "@/shared/types/kanji";
+import {
+  kanjiData,
+  KanjiComponent,
+  KanjiEntry,
+  KANJI_POSITIONS,
+} from "@/entities/kanji";
 import { pickConfusables } from "../api/pickConfusables";
 import shuffle from "@/shared/lib/shuffle/shuffle";
-
-const kanjiData = kanjiDataRaw as KanjiData;
 
 export function makeRound(kanji: string) {
   const answers = kanjiData[kanji].decomposition;
