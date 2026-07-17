@@ -58,37 +58,62 @@ export function TestKanjiComponents() {
     useState<KanjiComponent | null>(null);
   // const [revealed, setRevealed] = useState(false);
 
+  const tileGroupSx = {
+    flexWrap: "wrap",
+    gap: 1,
+    "& .MuiToggleButtonGroup-grouped": {
+      border: 1,
+      borderColor: "divider",
+      borderRadius: "8px !important",
+      m: 0,
+    },
+  };
+
   return (
-    <>
-      {round.prompt}
-      <ToggleButtonGroup aria-label="kanji components">
-        {round.tiles.map((s, i) => {
-          const found = selected.includes(s);
-          return (
-            <ToggleButton
-              key={i}
-              value={s.element}
-              selected={found}
-              disabled={found}
-              aria-label={s.element}
-              onClick={() => {
-                if (round.answers.includes(s)) {
-                  setPositionRound(true);
-                  setCurrentComponent(s);
-                  // setSelected((prev) => [...prev, s]);
-                }
-              }}
-            >
-              {s.element}
-            </ToggleButton>
-          );
-        })}
-      </ToggleButtonGroup>
+    <Stack spacing={3} sx={{ maxWidth: 480, mx: "auto", mt: 4 }}>
+      <Paper elevation={2} sx={{ p: 3 }}>
+        <Typography variant="overline" color="text.secondary">
+          Assemble the kanji for
+        </Typography>
+        <Typography variant="h5" gutterBottom>
+          {round.prompt}
+        </Typography>
+
+        <ToggleButtonGroup aria-label="kanji components" sx={tileGroupSx}>
+          {round.tiles.map((s, i) => {
+            const found = selected.includes(s);
+            return (
+              <ToggleButton
+                key={i}
+                value={s.element}
+                selected={found}
+                disabled={found}
+                aria-label={s.element}
+                sx={{ fontSize: "1.75rem", width: 56, height: 56 }}
+                onClick={() => {
+                  if (round.answers.includes(s)) {
+                    setPositionRound(true);
+                    setCurrentComponent(s);
+                    // setSelected((prev) => [...prev, s]);
+                  }
+                }}
+              >
+                {s.element}
+              </ToggleButton>
+            );
+          })}
+        </ToggleButtonGroup>
+      </Paper>
 
       {positionRound && (
-        <>
-          <h1>Position round for {currentComponent?.element}</h1>
-          <ToggleButtonGroup aria-label="kanji component positions">
+        <Paper elevation={4} sx={{ p: 3, bgcolor: "action.hover" }}>
+          <Typography variant="subtitle1" gutterBottom>
+            Where does <strong>{currentComponent?.element}</strong> go?
+          </Typography>
+          <ToggleButtonGroup
+            aria-label="kanji component positions"
+            sx={tileGroupSx}
+          >
             {KANJI_POSITIONS.map((pos) => (
               <ToggleButton
                 key={pos}
@@ -106,10 +131,17 @@ export function TestKanjiComponents() {
               </ToggleButton>
             ))}
           </ToggleButtonGroup>
-        </>
+        </Paper>
       )}
 
-      {selected.length === round.answers.length && query}
-    </>
+      {selected.length === round.answers.length && (
+        <Paper elevation={2} sx={{ p: 3, textAlign: "center" }}>
+          <Typography variant="h2">{query}</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Complete!
+          </Typography>
+        </Paper>
+      )}
+    </Stack>
   );
 }
