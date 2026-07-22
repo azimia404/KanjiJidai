@@ -27,6 +27,7 @@ export interface KanjiComponent {
 }
 
 export interface KanjiEntry {
+  character: string;
   meanings: string[];
   readings_on: string[];
   readings_kun: string[];
