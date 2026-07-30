@@ -37,6 +37,18 @@ export default function KanjiInfoCard({ character, kanji }: KanjiInfoCardProps) 
           <strong>Kun:</strong> {kanji.readings_kun.join("、")}
         </Typography>
       )}
+      {kanji.words.length > 0 && (
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          <strong>Words:</strong> 
+          <ol>
+            {kanji.words.map((word, index) => (
+              <li key={index}>
+                {word.word} ({word.reading}): {word.gloss}
+              </li>
+            ))}
+          </ol>
+        </Typography>
+      )}
     </Paper>
   );
 }

@@ -14,6 +14,12 @@ export const KANJI_POSITIONS = [
   '⿵B',
 ] as const;
 
+export interface KanjiWord {
+  word: string;
+  reading: string;
+  gloss: string;
+}
+
 export type KanjiPosition = (typeof KANJI_POSITIONS)[number];
 
 export interface KanjiComponent {
@@ -36,6 +42,7 @@ export interface KanjiEntry {
   jlpt: number | null;
   freq: number | null;
   decomposition: KanjiComponent[];
+  words: KanjiWord[];
 }
 
 export type KanjiData = Record<string, KanjiEntry>;
