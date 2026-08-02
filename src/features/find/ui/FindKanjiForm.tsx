@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Button, Grid } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
 import { findKanji, KanjiTree, KanjiInfoCard, KanjiEntry } from "@/entities/kanji";
@@ -34,17 +34,15 @@ export function FindKanjiForm() {
       {resultArray.length > 0 && (
         <Grid container spacing={2}>
           {resultArray.map((kanji, index) => (
-            <>
-              {console.log("kanji", kanji)}
-              {console.log("kanji", resultArray)}
-              <Grid size={6} key={index}>
+            <Fragment key={index}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <KanjiInfoCard character={kanji.character} kanji={kanji} />
               </Grid>
 
-              <Grid size={6} key={index + "tree"}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <KanjiTree character={kanji.character} kanji={kanji} />
               </Grid>
-            </>
+            </Fragment>
           ))}
         </Grid>
       )}
