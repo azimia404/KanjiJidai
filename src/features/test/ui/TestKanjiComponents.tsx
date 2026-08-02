@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
-import { Button, Paper, Stack, Typography } from "@mui/material";
+import { Button, Paper, Stack, Typography, Grid } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
@@ -219,23 +219,34 @@ export function TestKanjiComponents() {
   return (
     <Stack spacing={3} sx={{ maxWidth: 480, mx: "auto", mt: 4 }}>
       <Paper elevation={1} sx={{ p: 2 }}>
-        <Stack direction="row" spacing={1}>
-          <Input
-            value={input}
-            onChange={setInput}
-            placeholder="Кандзи для теста"
-          />
-          <Button variant="contained" onClick={() => startSession(input)}>
-            Start
-          </Button>
-          <Button
-            variant="outlined"
-            disabled={!due.length}
-            onClick={startReview}
-          >
-            Review due ({due.length})
-          </Button>
-        </Stack>
+        <Grid container spacing={1}>
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Input
+              value={input}
+              onChange={setInput}
+              placeholder="Кандзи для теста"
+            />
+          </Grid>
+          <Grid size={{ xs: 6, md: 3 }}>
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => startSession(input)}
+            >
+              Start
+            </Button>
+          </Grid>
+          <Grid size={{ xs: 6, md: 3 }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              disabled={!due.length}
+              onClick={startReview}
+            >
+              Review due ({due.length})
+            </Button>
+          </Grid>
+        </Grid>
       </Paper>
 
       <Typography variant="body2" color="text.secondary">
