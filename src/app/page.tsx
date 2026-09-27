@@ -3,6 +3,7 @@
 import { Button, Typography } from '@mui/material';
 import { FindKanjiForm } from '@/features/find/ui/FindKanjiForm';
 import { TestKanjiComponents } from '@/features/test/ui/TestKanjiComponents';
+import { TestWordReading } from '@/features/readingTest/api/TestWordReading';
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
 
       <FindKanjiForm />
       <TestKanjiComponents />
+      <TestWordReading />
     </div>
   );
 }

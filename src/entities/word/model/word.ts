@@ -5,7 +5,7 @@
  *  be filtered with the same `level === 3` style code. */
 export type JlptLevel = 5 | 4 | 3 | 2 | 1;
 
-export interface Word {
+export interface WordEntry {
   /** JMdict sequence number. Stable, but NOT unique after add_word_jlpt.py —
    *  words it had to insert reuse the source id with a "jlpt-{level}-" prefix
    *  (e.g. "jlpt-5-一日"), so treat `id` as an opaque key, not a lookup handle
@@ -48,7 +48,7 @@ export interface Word {
   kanji_jlpt_max?: JlptLevel;
 }
 
-export type WordData = Word[];
+export type WordData = Record<string, WordEntry>;
 
 // ---- usage sketches (not exported, just documenting intent) ----
 //
