@@ -16,7 +16,9 @@ import { findWord } from "@/entities/word/api/findWord";
 
 export function TestWordReading() {
   const [readingInput, setReadingInput] = useState("");
-  const [word, setWord] = useState("利根");
+  const [word, setWord] = useState(
+    Object.values(wordsData).filter((entry) => entry.jlpt === 3)[0].text,
+  );
   const [correct, setCorrect] = useState<boolean>(false);
   const [showResult, setShowResult] = useState(false);
   const wordEntry: WordEntry | undefined = findWord(word);
@@ -33,6 +35,17 @@ export function TestWordReading() {
       setCorrect(true);
     }
   };
+
+  const nextWord = () => {
+    const filteredWords = Object.values(wordsData).filter((entry) => entry.jlpt === 3);
+    const currentIndex = filteredWords.findIndex((entry) => entry.text === word);
+    const nextIndex = Math.floor(Math.random() * filteredWords.length);
+    setWord(filteredWords[nextIndex].text);
+    setReadingInput("");
+    setCorrect(false);
+    setShowResult(false);
+  };
+
   console.log("wordEntry", wordEntry);
   console.log("wordsData", wordsData);
   console.log("wordsData[word]", wordsData[word]);
@@ -41,6 +54,7 @@ export function TestWordReading() {
       <Typography variant="h2" component="span">
         {word}
       </Typography>
+      <Button onClick={() => nextWord()}>&gt;&gt;&gt;</Button>
       <Input
         value={readingInput}
         onChange={setReadingInput}
