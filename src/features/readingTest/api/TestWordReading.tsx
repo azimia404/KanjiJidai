@@ -66,6 +66,11 @@ export function TestWordReading() {
       {showResult && (
         <Typography variant="h3" component="span">
           {correct ? "Правильно!" : "Неправильно!"}
+          {showResult && !correct && (
+            <Typography variant="h4" component="span">
+              Правильный ответ: {wordEntry?.reading}
+            </Typography>
+          )}
         </Typography>
       )}
     </>
