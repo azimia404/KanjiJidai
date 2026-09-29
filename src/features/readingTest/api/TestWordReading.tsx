@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button, Grid } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
 import {
@@ -14,14 +14,10 @@ import { wordsData } from "@/entities/word/model/data";
 import { WordData, WordEntry } from "@/entities/word/model/word";
 import { findWord } from "@/entities/word/api/findWord";
 
-export function TestWordReading() {
+export function TestWordReading({ word }: { word: WordEntry | undefined }) {
   const [readingInput, setReadingInput] = useState("");
-  const [word, setWord] = useState(
-    Object.values(wordsData).filter((entry) => entry.jlpt === 3)[0].text,
-  );
   const [correct, setCorrect] = useState<boolean>(false);
   const [showResult, setShowResult] = useState(false);
-  const wordEntry: WordEntry | undefined = findWord(word);
 
   const handleCheck = (query: string) => {
     const queryTrimmed = query.trim();
@@ -31,30 +27,17 @@ export function TestWordReading() {
       setCorrect(false);
       return;
     }
-    if (query === wordEntry?.reading) {
-      setCorrect(true);
-    }
+    setCorrect(queryTrimmed === word?.reading);
   };
 
-  const nextWord = () => {
-    const filteredWords = Object.values(wordsData).filter((entry) => entry.jlpt === 3);
-    const currentIndex = filteredWords.findIndex((entry) => entry.text === word);
-    const nextIndex = Math.floor(Math.random() * filteredWords.length);
-    setWord(filteredWords[nextIndex].text);
-    setReadingInput("");
-    setCorrect(false);
-    setShowResult(false);
-  };
-
-  console.log("wordEntry", wordEntry);
+  console.log("WORD", word);
   console.log("wordsData", wordsData);
-  console.log("wordsData[word]", wordsData[word]);
+
   return (
     <>
       <Typography variant="h2" component="span">
-        {word}
+        {word?.text}
       </Typography>
-      <Button onClick={() => nextWord()}>&gt;&gt;&gt;</Button>
       <Input
         value={readingInput}
         onChange={setReadingInput}
@@ -68,7 +51,7 @@ export function TestWordReading() {
           {correct ? "Правильно!" : "Неправильно!"}
           {showResult && !correct && (
             <Typography variant="h4" component="span">
-              Правильный ответ: {wordEntry?.reading}
+              Правильный ответ: {word?.reading}
             </Typography>
           )}
         </Typography>
