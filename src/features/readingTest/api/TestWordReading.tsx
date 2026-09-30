@@ -14,30 +14,32 @@ import { wordsData } from "@/entities/word/model/data";
 import { WordData, WordEntry } from "@/entities/word/model/word";
 import { findWord } from "@/entities/word/api/findWord";
 
-export function TestWordReading({ word }: { word: WordEntry | undefined }) {
+export function TestWordReading({
+  word,
+  onResult,
+}: {
+  word: WordEntry | undefined;
+  onResult: (correct: boolean) => void;
+}) {
   const [readingInput, setReadingInput] = useState("");
-  const [correct, setCorrect] = useState<boolean>(false);
+  const [correct, setCorrect] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
   const handleCheck = (query: string) => {
     const queryTrimmed = query.trim();
+    const result = !!queryTrimmed && queryTrimmed === word?.reading;
+
+    setCorrect(result);
     setShowResult(true);
-
-    if (!queryTrimmed) {
-      setCorrect(false);
-      return;
-    }
-    setCorrect(queryTrimmed === word?.reading);
+    onResult(result);
   };
-
-  console.log("WORD", word);
-  console.log("wordsData", wordsData);
 
   return (
     <>
       <Typography variant="h2" component="span">
         {word?.text}
       </Typography>
+
       <Input
         value={readingInput}
         onChange={setReadingInput}
@@ -47,19 +49,14 @@ export function TestWordReading({ word }: { word: WordEntry | undefined }) {
       <Button onClick={() => handleCheck(readingInput)}>Проверить</Button>
 
       {showResult && (
-        <Typography variant="h3" component="span">
-          {correct ? "Правильно!" : "Неправильно!"}
-          {showResult && !correct && (
-            <>
-              <Typography variant="h4" component="span">
-                Правильный ответ: {word?.reading}
-              </Typography>
-              <Typography variant="h4" component="span">
-                Значение: {word?.glosses.join(", ")}
-              </Typography>
-            </>
-          )}
-        </Typography>
+        <>
+          <Typography variant="h3" component="span">
+            {correct ? "Правильно!" : "Неправильно!"}
+          </Typography>
+          <Typography variant="h3" component="span">
+            {word?.reading}
+          </Typography>
+        </>
       )}
     </>
   );
