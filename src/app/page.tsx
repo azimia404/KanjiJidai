@@ -15,9 +15,10 @@ export default function Home() {
 
       <FindKanjiForm />
 
+      <WordReadingTest />
+      
       <TestKanjiComponents />
 
-      <WordReadingTest />
     </div>
   );
 }
