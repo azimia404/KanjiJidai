@@ -50,9 +50,14 @@ export function TestWordReading({ word }: { word: WordEntry | undefined }) {
         <Typography variant="h3" component="span">
           {correct ? "Правильно!" : "Неправильно!"}
           {showResult && !correct && (
-            <Typography variant="h4" component="span">
-              Правильный ответ: {word?.reading}
-            </Typography>
+            <>
+              <Typography variant="h4" component="span">
+                Правильный ответ: {word?.reading}
+              </Typography>
+              <Typography variant="h4" component="span">
+                Значение: {word?.glosses.join(", ")}
+              </Typography>
+            </>
           )}
         </Typography>
       )}
