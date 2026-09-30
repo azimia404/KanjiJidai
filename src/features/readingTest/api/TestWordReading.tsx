@@ -28,10 +28,6 @@ export function TestWordReading({
 
   return (
     <>
-      <Typography variant="h2" component="span">
-        {word?.text}
-      </Typography>
-
       <Input
         value={readingInput}
         onChange={setReadingInput}
