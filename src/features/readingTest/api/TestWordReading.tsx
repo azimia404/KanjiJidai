@@ -1,18 +1,10 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
-import { Button, Grid } from "@mui/material";
+import { useState } from "react";
+import { Button } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
-import {
-  findKanji,
-  KanjiTree,
-  KanjiInfoCard,
-  KanjiEntry,
-} from "@/entities/kanji";
-import { Paper, Stack, Typography, Chip } from "@mui/material";
-import { wordsData } from "@/entities/word/model/data";
-import { WordData, WordEntry } from "@/entities/word/model/word";
-import { findWord } from "@/entities/word/api/findWord";
+import { Typography } from "@mui/material";
+import { WordEntry } from "@/entities/word/model/word";
 
 export function TestWordReading({
   word,
