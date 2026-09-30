@@ -9,6 +9,7 @@ import { Fragment, useState } from "react";
 import KanjiInfoCard from "@/entities/kanji/ui/KanjiInfoCard/KanjiInfoCard";
 import KanjiTree from "@/entities/kanji/ui/KanjiTree/KanjiTree";
 import { kanjiData } from "@/entities/kanji";
+import { getRandomWord } from "@/entities/word/api/getRandomWord";
 
 export default function Home() {
   const [word, setWord] = useState(
@@ -19,13 +20,7 @@ export default function Home() {
   const glossText = word?.glosses?.join(", ") ?? "";
 
   const nextWord = () => {
-    const filteredWords = Object.values(wordsData).filter(
-      (entry) => entry.jlpt === 3,
-    );
-
-    const nextIndex = Math.floor(Math.random() * filteredWords.length);
-
-    setWord(filteredWords[nextIndex]);
+    setWord(getRandomWord(3));
     setShowResult(false);
   };
   return (

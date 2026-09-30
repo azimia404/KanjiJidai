@@ -1,6 +1,14 @@
 import wordsRaw from "../../word/model/words.json";
-import { WordData } from "./word";
+import type { JlptLevel, WordData, WordEntry } from "./word";
 
-// The JSON stores each kanji's character as the record KEY, not as a field
-// inside the entry. Inject it here so KanjiEntry.character is real at runtime.
 export const wordsData: WordData = wordsRaw as WordData;
+
+export const words: WordEntry[] = Object.values(wordsData);
+
+export const wordsByJlpt: Record<JlptLevel, WordEntry[]> = {
+  1: words.filter((word) => word.jlpt === 1),
+  2: words.filter((word) => word.jlpt === 2),
+  3: words.filter((word) => word.jlpt === 3),
+  4: words.filter((word) => word.jlpt === 4),
+  5: words.filter((word) => word.jlpt === 5),
+};
