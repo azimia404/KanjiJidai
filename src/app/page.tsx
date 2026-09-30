@@ -16,6 +16,7 @@ export default function Home() {
   );
 
   const [showResult, setShowResult] = useState(false);
+  const glossText = word?.glosses?.join(", ") ?? "";
 
   const nextWord = () => {
     const filteredWords = Object.values(wordsData).filter(
@@ -42,6 +43,11 @@ export default function Home() {
         word={word}
         onResult={() => setShowResult(true)}
       />
+      {showResult && (
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            <strong>Gloss:</strong> {glossText}
+          </Typography>
+        )}
       {showResult &&
         (word?.kanji.length ? word?.kanji.length : 0) > 0 && (
           <Grid container spacing={2}>
