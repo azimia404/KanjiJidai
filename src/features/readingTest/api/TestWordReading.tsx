@@ -4,13 +4,13 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { Input } from "@/shared/ui/Input/Input";
 import { Typography } from "@mui/material";
-import { WordEntry } from "@/entities/word/model/word";
+import { Word } from "@/entities/word/model/word";
 
 export function TestWordReading({
   word,
   onResult,
 }: {
-  word: WordEntry | undefined;
+  word: Word | undefined;
   onResult: (correct: boolean) => void;
 }) {
   const [readingInput, setReadingInput] = useState("");

@@ -1,7 +1,7 @@
 import { wordsByJlpt } from "../model/data";
-import type { JlptLevel, WordEntry } from "../model/word";
+import type { JlptLevel, Word } from "../model/word";
 
-export function getRandomWord(level: JlptLevel): WordEntry | undefined {
+export function getRandomWord(level: JlptLevel): Word | undefined {
   const pool = wordsByJlpt[level];
 
   if (pool.length === 0) {
