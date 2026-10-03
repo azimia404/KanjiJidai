@@ -18,8 +18,8 @@ import { KanjiInfoCard, KanjiTree, kanjiData } from "@/entities/kanji";
 import { POS_LABELS } from "@/entities/word/model/word";
 import type { Word } from "@/entities/word/model/word";
 
-export function WordReadingTest() {
-  const [word, setWord] = useState<Word | undefined>(getRandomWord(3));
+export function WordReadingTest({ initialWord }: { initialWord: Word | undefined }) {
+  const [word, setWord] = useState<Word | undefined>(initialWord);
 
   const [showResult, setShowResult] = useState(false);
 
