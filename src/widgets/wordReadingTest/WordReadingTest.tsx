@@ -14,11 +14,7 @@ import {
 
 import { TestWordReading } from "@/features/readingTest/api/TestWordReading";
 import { getRandomWord } from "@/entities/word/api/getRandomWord";
-import {
-  KanjiInfoCard,
-  KanjiTree,
-  kanjiData,
-} from "@/entities/kanji";
+import { KanjiInfoCard, KanjiTree, kanjiData } from "@/entities/kanji";
 import { POS_LABELS } from "@/entities/word/model/word";
 import type { Word } from "@/entities/word/model/word";
 
@@ -35,9 +31,7 @@ export function WordReadingTest() {
   if (!word) {
     return (
       <Paper sx={{ p: 4 }}>
-        <Typography color="text.secondary">
-          No words available.
-        </Typography>
+        <Typography color="text.secondary">No words available.</Typography>
       </Paper>
     );
   }
@@ -113,10 +107,7 @@ export function WordReadingTest() {
                 }}
               >
                 <Stack spacing={2}>
-                  <Typography
-                    variant="subtitle2"
-                    color="text.secondary"
-                  >
+                  <Typography variant="subtitle2" color="text.secondary">
                     Meaning
                   </Typography>
 
@@ -124,17 +115,9 @@ export function WordReadingTest() {
                     {word.glosses.join(", ")}
                   </Typography>
 
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    flexWrap="wrap"
-                    useFlexGap
-                  >
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
                     {word.jlpt !== null && (
-                      <Chip
-                        label={`JLPT N${word.jlpt}`}
-                        size="small"
-                      />
+                      <Chip label={`JLPT N${word.jlpt}`} size="small" />
                     )}
 
                     {word.kanji_jlpt_max !== undefined &&
@@ -148,13 +131,36 @@ export function WordReadingTest() {
                   </Stack>
                 </Stack>
               </Box>
+              {/* Kanji information */}
+              {word.kanji.length > 0 && (
+                <Stack spacing={2}>
+                  <Typography variant="h5">Kanji</Typography>
+
+                  <Grid container spacing={2}>
+                    {word.kanji.map((character) => {
+                      const kanji = kanjiData[character];
+
+                      return (
+                        <Grid key={character} size={{ xs: 12, md: 6 }}>
+                          <Stack spacing={2}>
+                            <KanjiInfoCard
+                              character={character}
+                              kanji={kanji}
+                            />
+
+                            <KanjiTree character={character} kanji={kanji} />
+                          </Stack>
+                        </Grid>
+                      );
+                    })}
+                  </Grid>
+                </Stack>
+              )}
 
               {/* Detailed senses */}
               {word.senses && word.senses.length > 0 && (
                 <Stack spacing={2}>
-                  <Typography variant="h5">
-                    Meanings & Usage
-                  </Typography>
+                  <Typography variant="h5">Meanings & Usage</Typography>
 
                   {word.senses.map((sense, index) => (
                     <Box
@@ -193,9 +199,7 @@ export function WordReadingTest() {
 
                         <Stack spacing={0.5}>
                           {sense.glosses.map((gloss, glossIndex) => (
-                            <Typography key={glossIndex}>
-                              • {gloss}
-                            </Typography>
+                            <Typography key={glossIndex}>• {gloss}</Typography>
                           ))}
                         </Stack>
                       </Stack>
@@ -207,9 +211,7 @@ export function WordReadingTest() {
               {/* Examples */}
               {word.examples && word.examples.length > 0 && (
                 <Stack spacing={2}>
-                  <Typography variant="h5">
-                    Example Sentences
-                  </Typography>
+                  <Typography variant="h5">Example Sentences</Typography>
 
                   <Stack spacing={2}>
                     {word.examples.map((example, index) => (
@@ -222,17 +224,11 @@ export function WordReadingTest() {
                         }}
                       >
                         <Stack spacing={1}>
-                          <Typography
-                            variant="body1"
-                            sx={{ fontWeight: 500 }}
-                          >
+                          <Typography variant="body1" sx={{ fontWeight: 500 }}>
                             {example.ja}
                           </Typography>
 
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                          >
+                          <Typography variant="body2" color="text.secondary">
                             {example.en}
                           </Typography>
                         </Stack>
@@ -268,40 +264,6 @@ export function WordReadingTest() {
                   )}
                 </Stack>
               </Box>
-
-              {/* Kanji information */}
-              {word.kanji.length > 0 && (
-                <Stack spacing={2}>
-                  <Typography variant="h5">
-                    Kanji
-                  </Typography>
-
-                  <Grid container spacing={2}>
-                    {word.kanji.map((character) => {
-                      const kanji = kanjiData[character];
-
-                      return (
-                        <Grid
-                          key={character}
-                          size={{ xs: 12, md: 6 }}
-                        >
-                          <Stack spacing={2}>
-                            <KanjiInfoCard
-                              character={character}
-                              kanji={kanji}
-                            />
-
-                            <KanjiTree
-                              character={character}
-                              kanji={kanji}
-                            />
-                          </Stack>
-                        </Grid>
-                      );
-                    })}
-                  </Grid>
-                </Stack>
-              )}
             </Stack>
           </>
         )}
