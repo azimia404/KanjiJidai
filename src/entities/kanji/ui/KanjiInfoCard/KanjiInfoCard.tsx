@@ -14,7 +14,7 @@ export default function KanjiInfoCard({ character, kanji }: KanjiInfoCardProps) 
           {character}
         </Typography>
         <Typography variant="body1" color="text.secondary">
-          {kanji.meanings.join(", ")}
+          {kanji.meanings.length > 0 ? kanji.meanings.join(", ") : "No meanings"}
         </Typography>
       </Stack>
 
