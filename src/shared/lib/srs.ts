@@ -107,3 +107,165 @@ export function appendLog(entry: ReviewLogEntry): void {
   log.push(entry);
   window.localStorage.setItem(LOG_KEY, JSON.stringify(log));
 }
+
+/*
+ * SRS INTEGRATION GUIDE
+ *
+ * The SRS system tracks learning progress for an ITEM + SKILL.
+ *
+ * Example:
+ *   "薬" + "composition"  -> learn how to write 薬
+ *   word.id + "reading"  -> learn how to read a word
+ *
+ * ---------------------------------------------------------------------------
+ * BASIC FLOW
+ * ---------------------------------------------------------------------------
+ *
+ * 1. ADD AN ITEM TO THE SRS POOL
+ *
+ *    const key = keyOf(itemId, skill);
+ *
+ *    if (!cards[key]) {
+ *      const card = newCard(itemId, skill);
+ *
+ *      const store = {
+ *        ...cards,
+ *        [key]: card,
+ *      };
+ *
+ *      setCards(store);
+ *      storage.save(store);
+ *    }
+ *
+ *
+ * 2. GET CARDS THAT ARE DUE
+ *
+ *    const due = dueCards(cards).filter(
+ *      (card) => card.skill === "reading",
+ *    );
+ *
+ *    `cards` is the entire SRS pool.
+ *    `due` contains only cards that should be reviewed now.
+ *
+ *
+ * 3. CONVERT THE SRS CARDS INTO YOUR FEATURE'S DATA
+ *
+ *    SRS only stores `itemId`, `skill`, and FSRS data.
+ *    Use `itemId` to find the actual item in your data.
+ *
+ *    Example for words:
+ *
+ *    const words = due
+ *      .map((card) =>
+ *        wordsData.find(
+ *          (word) => word.id === card.itemId,
+ *        ),
+ *      )
+ *      .filter(
+ *        (word): word is Word => Boolean(word),
+ *      );
+ *
+ *
+ * 4. WHEN THE USER ANSWERS, REPORT THE RESULT
+ *
+ *    The test component should determine whether the answer was correct:
+ *
+ *      onResult(true);  // correct
+ *      onResult(false); // incorrect
+ *
+ *
+ * 5. UPDATE THE SRS CARD AFTER A REVIEW
+ *
+ *    const key = keyOf(itemId, skill);
+ *    const card = cards[key];
+ *
+ *    if (!card) return;
+ *
+ *    const updated = reviewCard(
+ *      card,
+ *      ratingFor(won),
+ *    );
+ *
+ *    const store = {
+ *      ...cards,
+ *      [key]: updated,
+ *    };
+ *
+ *    setCards(store);
+ *    storage.save(store);
+ *
+ *
+ * ---------------------------------------------------------------------------
+ * IMPORTANT CONCEPTS
+ * ---------------------------------------------------------------------------
+ *
+ * CardStore = the entire SRS pool.
+ *
+ * dueCards(cards) = cards from the pool that are currently due.
+ *
+ * reviewQueue = temporary list of due items for the current review session.
+ *
+ * FSRS = decides when the card should be reviewed again.
+ *
+ * Random practice is separate from SRS. Calling getRandomWord() does not
+ * affect SRS unless the feature explicitly adds/reviews the item.
+ *
+ *
+ * ---------------------------------------------------------------------------
+ * FULL EXAMPLE: WORD READING
+ * ---------------------------------------------------------------------------
+ *
+ * const key = keyOf(word.id, "reading");
+ *
+ * // Add to SRS pool
+ * if (!cards[key]) {
+ *   const card = newCard(word.id, "reading");
+ *
+ *   const store = {
+ *     ...cards,
+ *     [key]: card,
+ *   };
+ *
+ *   setCards(store);
+ *   storage.save(store);
+ * }
+ *
+ * // Get due cards
+ * const dueReading = dueCards(cards).filter(
+ *   (card) => card.skill === "reading",
+ * );
+ *
+ * // After the user answers
+ * const card = cards[key];
+ *
+ * if (card) {
+ *   const updated = reviewCard(
+ *     card,
+ *     ratingFor(won),
+ *   );
+ *
+ *   const store = {
+ *     ...cards,
+ *     [key]: updated,
+ *   };
+ *
+ *   setCards(store);
+ *   storage.save(store);
+ * }
+ *
+ *
+ * ---------------------------------------------------------------------------
+ * RULES
+ * ---------------------------------------------------------------------------
+ *
+ * - Use a stable itemId. For words, use word.id rather than word.text.
+ * - Always specify the skill.
+ * - Use keyOf() instead of manually creating card keys.
+ * - Use reviewCard() to update FSRS; do not modify FSRS scheduling manually.
+ * - Save the updated CardStore with storage.save().
+ * - Do not put random-practice items into SRS automatically.
+ * - The same item can have multiple independent cards:
+ *     薬 + meaning
+ *     薬 + reading
+ *     薬 + composition
+ */
