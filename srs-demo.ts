@@ -36,6 +36,6 @@ store[keyOf("国", "composition")] = a;
 store[keyOf("精", "composition")] = b;
 
 console.log("\ndueCards time-travel:");
-console.log("  now:        ", dueCards(store, t0).map((c) => c.kanji));
-console.log("  +5 minutes: ", dueCards(store, new Date(+t0 + 5 * 60000)).map((c) => c.kanji));
-console.log("  +1 hour:    ", dueCards(store, new Date(+t0 + 3600000)).map((c) => c.kanji));
+console.log("  now:        ", dueCards(store, t0).map((c) => c.itemId));
+console.log("  +5 minutes: ", dueCards(store, new Date(+t0 + 5 * 60000)).map((c) => c.itemId));
+console.log("  +1 hour:    ", dueCards(store, new Date(+t0 + 3600000)).map((c) => c.itemId  ));
