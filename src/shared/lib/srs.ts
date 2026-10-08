@@ -8,21 +8,26 @@ import {
   Grade,
 } from "ts-fsrs";
 
-interface SrsCard {
-  kanji: string;
+export interface SrsCard {
+  itemId: string;
   skill: Skill;
   fsrs: FsrsCard;
 }
 
-const scheduler = fsrs();
-
 export function newCard(
-  kanji: string,
+  itemId: string,
   skill: Skill,
   now: Date = new Date(),
 ): SrsCard {
-  return { kanji, skill, fsrs: createEmptyCard(now) };
+  return {
+    itemId,
+    skill,
+    fsrs: createEmptyCard(now),
+  };
 }
+
+const scheduler = fsrs();
+
 
 export function reviewCard(
   card: SrsCard,
@@ -32,17 +37,25 @@ export function reviewCard(
   const { card: next } = scheduler.next(card.fsrs, now, rating);
   return { ...card, fsrs: next };
 }
-
 export function ratingFor(won: boolean): Rating.Again | Rating.Good {
   return won ? Rating.Good : Rating.Again;
+}
+
+// For a "needs work" pool: skip real FSRS grading and force the card due
+// right now, whatever the user actually answered. Pure, like reviewCard;
+// log it yourself with mode: "forced" if you want honest history. Only
+// `due` changes (stability, reps, etc. are untouched), and answering
+// correctly never graduates it: the way out is removing it from the pool.
+export function gradeAsNeedsWork(card: SrsCard, now: Date = new Date()): SrsCard {
+  return { ...card, fsrs: { ...card.fsrs, due: now } };
 }
 
 export type CardStore = Record<string, SrsCard>;
 
 // Store key. Includes the skill so the same kanji can be tracked
 // independently per skill ("composition:薬" vs "meaning:薬").
-export function keyOf(kanji: string, skill: Skill): string {
-  return `${skill}:${kanji}`;
+export function keyOf(item: string, skill: Skill): string {
+  return `${skill}:${item}`;
 }
 
 export function dueCards(store: CardStore, now: Date = new Date()) {
@@ -53,13 +66,13 @@ export function dueCards(store: CardStore, now: Date = new Date()) {
 
 export interface ReviewLogEntry {
   ts: string;
-  kanji: string;
+  item: string;
   skill: Skill;
   rating: Rating;
-  mode: "test" | "srs";
+  mode: "test" | "srs" | "forced"; // "forced" = gradeAsNeedsWork, not an honest answer
 }
 
-const CARDS_KEY = "kanji-srs:cards:v1";
+const CARDS_KEY = "kanji-srs:cards:v2";
 const LOG_KEY = "kanji-srs:log:v1";
 
 export const storage = {

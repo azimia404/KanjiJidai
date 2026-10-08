@@ -105,7 +105,7 @@ export function TestKanjiComponents() {
 
   const startReview = () => {
     if (!due.length) return;
-    setQueue(due.map((c) => c.kanji));
+    setQueue(due.map((c) => c.itemId));
     setSessionMode("srs");
     setIndex(0);
     setResults([]);
@@ -154,7 +154,7 @@ export function TestKanjiComponents() {
     storage.save(store); // save `store`, not `cards` — state is still the old value here
     appendLog({
       ts: new Date().toISOString(),
-      kanji,
+      item: kanji,
       skill: "composition",
       rating,
       mode: sessionMode,
